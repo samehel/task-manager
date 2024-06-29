@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Connection } from "mongoose";
 
-const dbHost = process.env.VITE_DB_HOST
-const dbPort = process.env.VITE_DB_PORT
+const dbHost = process.env.VITE_DB_HOST || 'localhost'
+const dbPort = process.env.VITE_DB_PORT || 27017
 const dbName = process.env.VITE_DB_NAME || 'task_manager'
+const uri = `mongodb://${dbHost}:${dbPort}`;
 
-const connect = async() => {
+const connectDB = async() => {
     try {
-        let db: mongoose.Connection;
-        const uri = `mongodb://${dbHost}:${dbPort}`;
+        let db: Connection;
         await mongoose.connect(uri);
 
         console.log(`Successfully connected to MongoDB`);
@@ -37,4 +37,4 @@ const connect = async() => {
     }
 }
 
-export default connect;
+export default connectDB;

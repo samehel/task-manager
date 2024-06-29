@@ -1,14 +1,39 @@
 import { Flex, Text } from "@chakra-ui/react";
-import { Route, Routes } from "react-router-dom";
 import ConnectionError from "./Errors/ConnectionError";
-
+import { useEffect, useState } from "react";
+import LoadingPage from "./Errors/Loading";
 
 function App() {
+  const [isDBServerOnline, setIsDBServerOnline] = useState<boolean | null>(null);
+  
+  useEffect(() => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://localhost:3002', true);
+    xhr.onreadystatechange = () => {
+      if(xhr.readyState === 4) {
+        if(xhr.status === 200) 
+          setIsDBServerOnline(true);
+        else
+          setIsDBServerOnline(false);
+      }
+    };
+
+    xhr.onerror = () => {
+      setIsDBServerOnline(false);
+    }
+
+    xhr.send();
+}, []);
+  
+  if(isDBServerOnline == null) 
+    return <LoadingPage />
+  else if (isDBServerOnline === false) 
+    return <ConnectionError />
+  
   return (
-    <Routes>
-      <Route path="/" element={<Flex><Text>Hello World!</Text></Flex>} />
-      <Route path="/connection-error" element={<ConnectionError />} />
-    </Routes>
+    <Flex>
+      <Text>Successfully Connected</Text>
+    </Flex>
   )
 }
 

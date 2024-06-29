@@ -1,16 +1,22 @@
 import express, { Request, Response } from 'express';
-import connect from './Connection';
+import connectDB from './Connection';
+import cors from 'cors';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
-const port = 5173;
+const port = process.env.VITE_SERVER_PORT || 3002;    
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+app.use(cors()); 
 
 const startServer = async () => {
     try {
-      await connect();
+      await connectDB();
       console.log('MongoDB connected');
     } catch (e) {
       console.error('MongoDB connection error (Server):', e);
-      app.get('*', (req: Request, res: Response) => {
+      app.use('*', (req: Request, res: Response) => {
         res.redirect('/connection-error'); 
       });
     }
@@ -21,6 +27,10 @@ const startServer = async () => {
   };
   
   startServer();
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Server is online and running.');
+});
 
 app.get('/connection-error', (req: Request, res: Response) => {
     res.sendFile(__dirname + '/Errors/ConnectionError.tsx');

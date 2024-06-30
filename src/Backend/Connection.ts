@@ -1,4 +1,4 @@
-import mongoose, { Connection } from "mongoose";
+import mongoose from "mongoose";
 import '../../dotenv.config.ts'
 
 const dbHost = process.env.VITE_DB_HOST

@@ -8,11 +8,13 @@ const LoadingPage = () => {
         <Box className='gradient-background' minHeight="100vh">
             <Center h="100vh" flexDirection="column" justifyContent="center">
                 <Text 
+                as="div"
                 marginBottom="4" 
                 fontSize="xxx-large" 
                 fontFamily={theme.fonts.text} 
                 color='whitesmoke' 
-                fontWeight='bold'>
+                fontWeight='bold'
+                >
                 <Typewriter
                     options={{
                         autoStart: true,

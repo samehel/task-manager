@@ -1,11 +1,22 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import ConnectionError from "./Errors/ConnectionError";
 import { useEffect, useState } from "react";
 import LoadingPage from "./Errors/Loading";
+import Header from "./Components/Header";
+import TaskList from "./Components/TaskList";
+import { getAllTasks } from "./Controller/CRUD";
+
+interface Task {
+  _id: string;
+  title: string;
+  description: string;
+  priority: number;
+}
 
 function App() {
   const [isDBServerOnline, setIsDBServerOnline] = useState<boolean | null>(null);
-  
+  const [tasks, setTasks] = useState<Task[]>([]);
+
   useEffect(() => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'http://localhost:3002', true);
@@ -23,16 +34,30 @@ function App() {
     }
 
     xhr.send();
-}, []);
-  
+
+    if(isDBServerOnline === true) {
+      const fetchTasks = async() => {
+        try {
+          const fetchedTasks = await getAllTasks();
+          setTasks(fetchedTasks);
+        } catch (e) {
+          console.error('Failed to fetch tasks: ', e);
+        }
+      }
+      fetchTasks();
+    }
+  }, []);
+    
   if(isDBServerOnline == null) 
     return <LoadingPage />
   else if (isDBServerOnline === false) 
     return <ConnectionError />
-  
+
+
   return (
     <Flex>
-      <Text>Successfully Connected</Text>
+      <Header />
+      <TaskList tasks={tasks}/>
     </Flex>
   )
 }

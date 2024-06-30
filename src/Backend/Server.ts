@@ -4,12 +4,16 @@ import cors from 'cors';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import '../../dotenv.config.ts'
+import Routes from './Routes.ts';
 
 const app = express();
 const port = process.env.VITE_SERVER_PORT;    
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(cors()); 
+app.use(express.json());
+
+app.use(Routes)
 
 const startServer = async () => {
     try {
@@ -26,8 +30,8 @@ const startServer = async () => {
       console.log(`Server running at http://localhost:${port}`);
     });
   };
-  
-  startServer();
+
+startServer();
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Server is online and running.');

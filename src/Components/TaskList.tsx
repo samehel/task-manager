@@ -1,19 +1,52 @@
 import { Box, Button, Flex, IconButton, Text } from "@chakra-ui/react"
 import { AiOutlineDelete, AiOutlineEdit, AiOutlinePlus } from "react-icons/ai"
 import theme from "../assets/theme"
+import { useState } from "react";
+import AddTaskPopup from "./AddTaskPopup";
+import { createTask, deleteTask } from "../Controller/CRUD";
 
 interface Task {
-    _id: string;
+    _id?: number;
     title: string;
     description: string;
     priority: number;
-  }
+}
   
-  interface TaskListProps {
+interface TaskListProps {
     tasks: Task[];
-  }
+    refreshTaskList: () => void;
+}
 
-const TaskList = ({ tasks }: TaskListProps) => {
+const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
+    const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+
+    const togglePopup = () => {
+        setIsPopupOpen(!isPopupOpen);
+    }
+
+    const handleCreateTask = async (newTask: Task) => {
+        try {
+            await createTask(newTask);
+            refreshTaskList()
+        } catch(e) {
+            console.error(e);
+            throw e;
+        }
+    }
+
+    const handleDeleteTask = async(id: number | undefined) => {
+        if(id === undefined)
+            return;
+
+        try {
+            await deleteTask(id);
+            refreshTaskList();
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
+
     return (
         <Box 
             mt="7rem"
@@ -45,6 +78,7 @@ const TaskList = ({ tasks }: TaskListProps) => {
                     color="indigo"
                     bg="rgba(255, 155, 255, 0.5)"
                     _hover={{ bg: 'rgba(155, 155, 255, 1.8)' }}
+                    onClick={togglePopup}
                 />
             </Flex>
             {tasks.map((task) => (
@@ -84,10 +118,13 @@ const TaskList = ({ tasks }: TaskListProps) => {
                             color="indigo"
                             bg="rgba(255, 155, 255, 0.5)"
                             _hover={{ bg: 'rgba(155, 155, 255, 1.8)' }}
+                            onClick={() => handleDeleteTask(task._id)}
                         />
                     </Flex>
                 </Flex>
             ))}
+
+            <AddTaskPopup isOpen={isPopupOpen} onClose={togglePopup} onCreateTask={handleCreateTask} />
         </Box>
     )
     }

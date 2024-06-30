@@ -1,13 +1,13 @@
 import { Flex } from "@chakra-ui/react";
 import ConnectionError from "./Errors/ConnectionError";
 import { useEffect, useState } from "react";
-import LoadingPage from "./Errors/Loading";
+import LoadingPage from "./Components/Loading";
 import Header from "./Components/Header";
 import TaskList from "./Components/TaskList";
 import { getAllTasks } from "./Controller/CRUD";
 
 interface Task {
-  _id: string;
+  _id: number;
   title: string;
   description: string;
   priority: number;
@@ -34,19 +34,22 @@ function App() {
     }
 
     xhr.send();
-
-    if(isDBServerOnline === true) {
-      const fetchTasks = async() => {
-        try {
-          const fetchedTasks = await getAllTasks();
-          setTasks(fetchedTasks);
-        } catch (e) {
-          console.error('Failed to fetch tasks: ', e);
-        }
-      }
-      fetchTasks();
-    }
   }, []);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+        try {
+            const fetchedTasks = await getAllTasks();
+            setTasks(fetchedTasks);
+        } catch (error) {
+            console.error('Failed to fetch tasks:', error);
+        }
+    };
+
+    if (isDBServerOnline) {
+        fetchTasks();
+    }
+  }, [isDBServerOnline]);
     
   if(isDBServerOnline == null) 
     return <LoadingPage />
@@ -54,10 +57,19 @@ function App() {
     return <ConnectionError />
 
 
+  const refreshTaskList = async () => {
+    try {
+        const fetchedTasks = await getAllTasks();
+        setTasks(fetchedTasks)
+        } catch (e) {
+        console.error('Failed to fetch tasks: ', e);
+        }
+    }
+
   return (
     <Flex>
       <Header />
-      <TaskList tasks={tasks}/>
+      <TaskList tasks={tasks} refreshTaskList={refreshTaskList}/>
     </Flex>
   )
 }

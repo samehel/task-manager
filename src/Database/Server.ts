@@ -3,9 +3,10 @@ import connectDB from './Connection';
 import cors from 'cors';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import '../../dotenv.config.ts'
 
 const app = express();
-const port = process.env.VITE_SERVER_PORT || 3002;    
+const port = process.env.VITE_SERVER_PORT;    
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(cors()); 

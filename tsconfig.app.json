@@ -26,5 +26,5 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
   },
-  "include": ["src"]
+  "include": ["src", "dotenv.config.ts"]
 }

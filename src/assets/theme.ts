@@ -6,7 +6,7 @@ const theme = extendTheme({
         text: 'Poppins, sans-serif',
     },
     colors: {
-        emerald: 'linear-gradient(to right, #9fe2bf, #47b494)'
+        emerald: 'linear-gradient(to right, #f5de2f, #f5822f)'
     }
 });
 

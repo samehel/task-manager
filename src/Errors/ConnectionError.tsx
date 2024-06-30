@@ -24,7 +24,7 @@ const ConnectionError = () => {
         <Box className='gradient-background' minHeight="100vh">
             <Center h="100vh" flexDirection="column" justifyContent="center">
                 <Text marginBottom="4" fontSize="xxx-large" fontFamily={theme.fonts.text} color='whitesmoke' fontWeight='bold'>{errorMessages[randIndex]}</Text>
-                <Text bgGradient={theme.colors.emerald} bgClip="text" marginBottom="4" fontSize="xxx-large" fontFamily={theme.fonts.text} fontWeight='bold' fontStyle="italic">{errorMessagesItalic[randIndex]}</Text>
+                <Text bgGradient={theme.colors.emerald} bgClip="text" marginBottom="4" fontSize="x-large" fontFamily={theme.fonts.text} fontWeight='bold' fontStyle="italic">{errorMessagesItalic[randIndex]}</Text>
             </Center>
         </Box>
     )

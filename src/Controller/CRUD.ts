@@ -10,7 +10,9 @@ interface TaskProp {
     _id?: number, 
     title: string, 
     description: string, 
-    priority: number 
+    priority: number,
+    isCompleted: boolean,
+    dueDate: Date | string
 }
 
 export const getAllTasks = async () => {
@@ -35,8 +37,8 @@ export const createTask = async (Task: TaskProp) => {
 
 export const updateTask = async(Task: TaskProp) => {
     try {
-        const { _id, title, description, priority } = Task;
-        const res = await axios.put(`${UPDATE_TASK_URL}/${_id}`, { title, description, priority });
+        const { _id, title, description, priority, isCompleted, dueDate } = Task;
+        const res = await axios.put(`${UPDATE_TASK_URL}/${_id}`, { title, description, priority, isCompleted, dueDate });
         return res.data;
     } catch (e) {
         console.error('Error updating a task: ', e);

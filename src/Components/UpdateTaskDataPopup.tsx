@@ -11,7 +11,8 @@ import {
     FormLabel, 
     Input,
     Select,
-    FormErrorMessage
+    FormErrorMessage,
+    Checkbox
 } from "@chakra-ui/react";
 
 interface Task {
@@ -19,6 +20,8 @@ interface Task {
     title: string;
     description: string;
     priority: number;
+    isCompleted: boolean;
+    dueDate: Date | string;
 }
 
 interface UpdateTaskDataPopupProps {
@@ -28,18 +31,33 @@ interface UpdateTaskDataPopupProps {
   task: Task | null;
 }
 
+const formatDateToInputValue = (date: Date | string) => {
+  const d = new Date(date);
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${year}-${month}-${day}`;
+};
+
 const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskDataPopupProps) => {
   const [title, setTitle] = useState(task?.title || "");
   const [description, setDescription] = useState(task?.description || "");
   const [priority, setPriority] = useState(task?.priority?.toString() || "1");
+  const [isCompleted, setIsCompleted] = useState(task?.isCompleted || false);
+  const [dueDate, setDueDate] = useState(
+    task?.dueDate ? formatDateToInputValue(task.dueDate) : ""
+  );
   const [titleError, setTitleError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
+  const [dueDateError, setDueDateError] = useState("");
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setDescription(task.description);
       setPriority(task.priority?.toString());
+      setIsCompleted(task.isCompleted);
+      setDueDate(formatDateToInputValue(task.dueDate));
     }
   }, [task]);
 
@@ -54,7 +72,9 @@ const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskD
         _id: task?._id,
         title,
         description,
-        priority: Number(priority)
+        priority: Number(priority),
+        isCompleted,
+        dueDate: new Date(dueDate)
     };
     onUpdateTask(updatedTask);
     resetForm(updatedTask);
@@ -77,6 +97,13 @@ const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskD
       setDescriptionError("");
     }
 
+    if(!dueDate) {
+      setDueDate("Due Date is required");
+      isValid = false;
+    } else {
+      setDueDate("");
+    }
+
     return isValid;
   };
 
@@ -88,8 +115,11 @@ const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskD
     setTitle(task.title);
     setDescription(task.description);
     setPriority(task.priority.toString());
+    setIsCompleted(task.isCompleted);
+    setDueDate(formatDateToInputValue(task.dueDate));
     setTitleError("");
     setDescriptionError("");
+    setDueDateError("");
   };
 
   const handleClose = () => {
@@ -102,7 +132,7 @@ const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskD
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Add New Task</ModalHeader>
+        <ModalHeader>Update a Task</ModalHeader>
         <ModalBody>
           <FormControl isInvalid={!!titleError}>
             <FormLabel>Title</FormLabel>
@@ -121,7 +151,25 @@ const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskD
                     <option value="2">Medium</option>
                     <option value="3">High</option>
                 </Select>    
-            </FormControl>
+          </FormControl>
+          <FormControl mt={4} isInvalid={!!dueDateError}>
+          <FormLabel>Due Date</FormLabel>
+                <Input
+                  type='date'     
+                  value={dueDate}             
+                  onChange={(e) => setDueDate(e.target.value)}
+                />
+                <FormErrorMessage>{dueDateError}</FormErrorMessage>
+          </FormControl>
+          <FormControl mt={4} mb={4}>
+              <Checkbox
+                isChecked={isCompleted}
+                mr={2}
+                onChange={(e) => setIsCompleted(e.target.checked)}
+              >
+                Completed
+              </Checkbox>
+          </FormControl>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={handleUpdateTask}>

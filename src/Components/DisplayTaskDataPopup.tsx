@@ -15,6 +15,8 @@ interface Task {
     title: string;
     description: string;
     priority: number;
+    isCompleted: boolean;
+    dueDate: Date | string;
 }
 
 interface DisplayTaskPopupProps {
@@ -24,6 +26,10 @@ interface DisplayTaskPopupProps {
 }
 
 const DisplayTaskDataPopup = ({ isOpen, onClose, task }: DisplayTaskPopupProps) => {
+  const dueDate = task?.dueDate ? new Date(task.dueDate) : null;
+  const dueDateString = dueDate && !isNaN(dueDate.getTime()) ? dueDate.toDateString() : "";
+
+  
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -80,6 +86,40 @@ const DisplayTaskDataPopup = ({ isOpen, onClose, task }: DisplayTaskPopupProps) 
               mb={3}
               >
                 {task?.priority === 1 ? "Low" : task?.priority === 2 ? "Medium" : "High"}
+            </Box>
+          <Tag>
+            <TagLabel>Due Date</TagLabel>
+          </Tag>
+          <Box 
+              padding="8px"
+              borderWidth="1px"
+              borderRadius="md"
+              borderColor="gray.200"
+              backgroundColor="gray.50"
+              height="40px"
+              display="flex"
+              alignItems="center"
+              mt={3}
+              mb={3}
+              >
+                {dueDateString}
+            </Box>
+          <Tag>
+            <TagLabel>Completed?</TagLabel>
+          </Tag>
+          <Box 
+              padding="8px"
+              borderWidth="1px"
+              borderRadius="md"
+              borderColor="gray.200"
+              backgroundColor="gray.50"
+              height="40px"
+              display="flex"
+              alignItems="center"
+              mt={3}
+              mb={3}
+              >
+                {task?.isCompleted === true ? 'Yes' : 'No'}
             </Box>
         </ModalBody>
         <ModalFooter>

@@ -12,6 +12,8 @@ interface Task {
     title: string;
     description: string;
     priority: number;
+    isCompleted: boolean;
+    dueDate: Date | string;
 }
   
 interface TaskListProps {

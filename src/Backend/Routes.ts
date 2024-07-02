@@ -28,10 +28,10 @@ router.post('/api/create_task', async (req, res) => {
 // Update task
 router.put('/api/update_task/:id', async (req, res) => {
     const { id } = req.params;
-    const { title, description, priority } = req.body;
+    const { title, description, priority, isCompleted, dueDate } = req.body;
     
     try {
-        const updatedTask = await TaskDataModel.findByIdAndUpdate(id, { title, description, priority }, { new: true });
+        const updatedTask = await TaskDataModel.findByIdAndUpdate(id, { title, description, priority, isCompleted, dueDate }, { new: true });
         res.status(201).json(updatedTask);
     } catch (e) {
         console.error(e);

@@ -5,12 +5,15 @@ import LoadingPage from "./Components/Loading";
 import Header from "./Components/Header";
 import TaskList from "./Components/TaskList";
 import { getAllTasks } from "./Controller/CRUD";
+import TaskManagerStats from "./Components/TaskManagerStats";
 
 interface Task {
   _id: number;
   title: string;
   description: string;
   priority: number;
+  isCompleted: boolean;
+  dueDate: Date;
 }
 
 function App() {
@@ -70,6 +73,7 @@ function App() {
     <Flex>
       <Header />
       <TaskList tasks={tasks} refreshTaskList={refreshTaskList}/>
+      <TaskManagerStats tasks={tasks} refreshTaskList={refreshTaskList}/>
     </Flex>
   )
 }

@@ -4,6 +4,7 @@ import theme from "../assets/theme"
 import { useState } from "react";
 import AddTaskPopup from "./AddTaskPopup";
 import { createTask, deleteTask } from "../Controller/CRUD";
+import DisplayTaskDataPopup from "./DisplayTaskDataPopup";
 
 interface Task {
     _id?: number;
@@ -18,11 +19,19 @@ interface TaskListProps {
 }
 
 const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
-    const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+    const [isAddTaskPopupOpen, setIsAddTaskPopupOpen] = useState<boolean>(false);
+    const [isViewTaskPopupOpen, setIsViewTaskPopupOpen] = useState<boolean>(false);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-    const togglePopup = () => {
-        setIsPopupOpen(!isPopupOpen);
+    const toggleAddTaskPopup = () => {
+        setIsAddTaskPopupOpen(!isAddTaskPopupOpen);
     }
+
+    const toggleViewTaskPopup = (task?: Task) => {
+        setIsViewTaskPopupOpen(!isViewTaskPopupOpen);
+        setSelectedTask(task || null);
+    }
+
 
     const handleCreateTask = async (newTask: Task) => {
         try {
@@ -78,7 +87,7 @@ const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
                     color="indigo"
                     bg="rgba(255, 155, 255, 0.5)"
                     _hover={{ bg: 'rgba(155, 155, 255, 1.8)' }}
-                    onClick={togglePopup}
+                    onClick={toggleAddTaskPopup}
                 />
             </Flex>
             {tasks.map((task) => (
@@ -98,6 +107,7 @@ const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
                         overflow="hidden"
                         textOverflow="ellipsis"
                         mr="2"
+                        onClick={() => toggleViewTaskPopup(task)}
                     >
                         {task.title}
                     </Button>
@@ -124,7 +134,8 @@ const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
                 </Flex>
             ))}
 
-            <AddTaskPopup isOpen={isPopupOpen} onClose={togglePopup} onCreateTask={handleCreateTask} />
+            <AddTaskPopup isOpen={isAddTaskPopupOpen} onClose={toggleAddTaskPopup} onCreateTask={handleCreateTask} />
+            <DisplayTaskDataPopup isOpen={isViewTaskPopupOpen} onClose={toggleViewTaskPopup} task={selectedTask}/>
         </Box>
     )
     }

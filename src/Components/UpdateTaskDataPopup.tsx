@@ -31,7 +31,7 @@ interface UpdateTaskDataPopupProps {
 const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskDataPopupProps) => {
   const [title, setTitle] = useState(task?.title || "");
   const [description, setDescription] = useState(task?.description || "");
-  const [priority, setPriority] = useState(task?.priority.toString() || "1");
+  const [priority, setPriority] = useState(task?.priority?.toString() || "1");
   const [titleError, setTitleError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
 
@@ -39,7 +39,7 @@ const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskD
     if (task) {
       setTitle(task.title);
       setDescription(task.description);
-      setPriority(task.priority.toString());
+      setPriority(task.priority?.toString());
     }
   }, [task]);
 

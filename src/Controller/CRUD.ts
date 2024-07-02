@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const GET_TASKS_URL = 'http://localhost:3002/api/get_all_tasks';
 const CREATE_TASK_URL = 'http://localhost:3002/api/create_task';
+const UPDATE_TASK_URL = 'http://localhost:3002/api/update_task';
 const DELETE_TASK_URL = 'http://localhost:3002/api/delete_task';
 
 
@@ -28,6 +29,17 @@ export const createTask = async (Task: TaskProp) => {
         return res.data;
     } catch (e) {
         console.error('Error creating a task: ', e);
+        throw e;
+    }
+}
+
+export const updateTask = async(Task: TaskProp) => {
+    try {
+        const { _id, title, description, priority } = Task;
+        const res = await axios.put(`${UPDATE_TASK_URL}/${_id}`, { title, description, priority });
+        return res.data;
+    } catch (e) {
+        console.error('Error updating a task: ', e);
         throw e;
     }
 }

@@ -25,6 +25,20 @@ router.post('/api/create_task', async (req, res) => {
     }
 });
 
+// Update task
+router.put('/api/update_task/:id', async (req, res) => {
+    const { id } = req.params;
+    const { title, description, priority } = req.body;
+    
+    try {
+        const updatedTask = await TaskDataModel.findByIdAndUpdate(id, { title, description, priority }, { new: true });
+        res.status(201).json(updatedTask);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ message: `Error creating new task: ${e}`})
+    }
+});
+
 // Delete task
 router.delete('/api/delete_task/:id', async (req, res) => {
     const id = req.params.id;

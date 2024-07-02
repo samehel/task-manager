@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
     Modal, 
     ModalOverlay, 
@@ -15,35 +15,49 @@ import {
 } from "@chakra-ui/react";
 
 interface Task {
+    _id?: number;
     title: string;
     description: string;
     priority: number;
 }
 
-interface AddTaskPopupProps {
+interface UpdateTaskDataPopupProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateTask: (newTask: Task) => void;
+  onUpdateTask: (task: Task | null) => Promise<void>;
+  task: Task | null;
 }
 
-const AddTaskPopup = ({ isOpen, onClose, onCreateTask }: AddTaskPopupProps) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("1");
+const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskDataPopupProps) => {
+  const [title, setTitle] = useState(task?.title || "");
+  const [description, setDescription] = useState(task?.description || "");
+  const [priority, setPriority] = useState(task?.priority.toString() || "1");
   const [titleError, setTitleError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
 
-  const handleCreateTask = async () => {
+  useEffect(() => {
+    if (task) {
+      setTitle(task.title);
+      setDescription(task.description);
+      setPriority(task.priority.toString());
+    }
+  }, [task]);
+
+  const handleUpdateTask = async () => {
     if (!validateForm()) 
         return;
 
-    const newTask: Task = {
+    if(title == null || description == null)
+        return;
+
+    const updatedTask: Task | null = {
+        _id: task?._id,
         title,
         description,
         priority: Number(priority)
     };
-    onCreateTask(newTask);
-    resetForm();
+    onUpdateTask(updatedTask);
+    resetForm(updatedTask);
     onClose();
   };
 
@@ -66,16 +80,21 @@ const AddTaskPopup = ({ isOpen, onClose, onCreateTask }: AddTaskPopupProps) => {
     return isValid;
   };
 
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setPriority("1");
+  const resetForm = (task: Task | null) => {
+
+    if(task == null)
+        return;
+
+    setTitle(task.title);
+    setDescription(task.description);
+    setPriority(task.priority.toString());
     setTitleError("");
     setDescriptionError("");
   };
 
   const handleClose = () => {
-    resetForm();
+    if(task)
+        resetForm(task);
     onClose();
   };
 
@@ -105,8 +124,8 @@ const AddTaskPopup = ({ isOpen, onClose, onCreateTask }: AddTaskPopupProps) => {
             </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleCreateTask}>
-            Create
+          <Button colorScheme="blue" mr={3} onClick={handleUpdateTask}>
+            Update
           </Button>
           <Button onClick={handleClose}>Cancel</Button>
         </ModalFooter>
@@ -115,4 +134,4 @@ const AddTaskPopup = ({ isOpen, onClose, onCreateTask }: AddTaskPopupProps) => {
   );
 };
 
-export default AddTaskPopup;
+export default UpdateTaskDataPopup;

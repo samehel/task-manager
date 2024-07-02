@@ -3,8 +3,9 @@ import { AiOutlineDelete, AiOutlineEdit, AiOutlinePlus } from "react-icons/ai"
 import theme from "../assets/theme"
 import { useState } from "react";
 import AddTaskPopup from "./AddTaskPopup";
-import { createTask, deleteTask } from "../Controller/CRUD";
+import { createTask, deleteTask, updateTask } from "../Controller/CRUD";
 import DisplayTaskDataPopup from "./DisplayTaskDataPopup";
+import UpdateTaskDataPopup from "./UpdateTaskDataPopup";
 
 interface Task {
     _id?: number;
@@ -21,6 +22,7 @@ interface TaskListProps {
 const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
     const [isAddTaskPopupOpen, setIsAddTaskPopupOpen] = useState<boolean>(false);
     const [isViewTaskPopupOpen, setIsViewTaskPopupOpen] = useState<boolean>(false);
+    const [isUpdateTaskPopupOpen, setIsUpdateTaskPopupOpen] = useState<boolean>(false);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
     const toggleAddTaskPopup = () => {
@@ -32,12 +34,29 @@ const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
         setSelectedTask(task || null);
     }
 
+    const toggleUpdateTaskPopup = (task?: Task) => {
+        setIsUpdateTaskPopupOpen(!isUpdateTaskPopupOpen);
+        setSelectedTask(task || null);
+    }
 
     const handleCreateTask = async (newTask: Task) => {
         try {
             await createTask(newTask);
-            refreshTaskList()
+            refreshTaskList();
         } catch(e) {
+            console.error(e);
+            throw e;
+        }
+    }
+
+    const handleUpdateTask = async(updatedTask: Task | null) => {
+        if(updatedTask === null)
+            return;
+
+        try {
+            await updateTask(updatedTask);
+            refreshTaskList();
+        } catch (e) {
             console.error(e);
             throw e;
         }
@@ -120,6 +139,7 @@ const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
                             mr="2"
                             bg="rgba(255, 155, 255, 0.5)"
                             _hover={{ bg: 'rgba(155, 155, 255, 1.8)' }}
+                            onClick={() => toggleUpdateTaskPopup(task)}
                         />
                         <IconButton 
                             aria-label="Delete Task"
@@ -136,6 +156,7 @@ const TaskList = ({ tasks, refreshTaskList }: TaskListProps) => {
 
             <AddTaskPopup isOpen={isAddTaskPopupOpen} onClose={toggleAddTaskPopup} onCreateTask={handleCreateTask} />
             <DisplayTaskDataPopup isOpen={isViewTaskPopupOpen} onClose={toggleViewTaskPopup} task={selectedTask}/>
+            <UpdateTaskDataPopup isOpen={isUpdateTaskPopupOpen} onClose={toggleUpdateTaskPopup} onUpdateTask={handleUpdateTask} task={selectedTask}/>
         </Box>
     )
     }

@@ -39,10 +39,12 @@ This Task Management System is a web application designed to help users manage t
      ```
 
 3. **Set up environment variables:**
-   - Create a `.env` file in the `backend` directory with the following content:
+   - Create a `.env` file in the main directory with the following content:
      ```
-     MONGODB_URI=your_mongodb_connection_string
-     PORT=3002
+      VITE_DB_HOST=localhost
+      VITE_DB_PORT=27017
+      VITE_DB_NAME=task-manager
+      VITE_SERVER_PORT=3002
      ```
 
 ## Running the Application

@@ -98,10 +98,10 @@ const UpdateTaskDataPopup = ({ isOpen, onClose, onUpdateTask, task}: UpdateTaskD
     }
 
     if(!dueDate) {
-      setDueDate("Due Date is required");
+      setDueDateError("Due Date is required");
       isValid = false;
     } else {
-      setDueDate("");
+      setDueDateError("");
     }
 
     return isValid;

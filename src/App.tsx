@@ -6,6 +6,7 @@ import Header from "./Components/Header";
 import TaskList from "./Components/TaskList";
 import { getAllTasks } from "./Controller/CRUD";
 import TaskManagerStats from "./Components/TaskManagerStats";
+import DrawCharts from "./Components/DrawCharts";
 
 interface Task {
   _id: number;
@@ -16,9 +17,21 @@ interface Task {
   dueDate: Date;
 }
 
+interface Stats {
+  totalTasks: number,
+  totalLTasks: number,
+  totalMTasks: number,
+  totalHTasks: number,
+  completedTasks: number,
+  uncompletedTasks: number,
+  overdueTasks: number,
+  nearestTask: Task | null
+}
+
 function App() {
   const [isDBServerOnline, setIsDBServerOnline] = useState<boolean | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
     const xhr = new XMLHttpRequest();
@@ -67,13 +80,20 @@ function App() {
         } catch (e) {
         console.error('Failed to fetch tasks: ', e);
         }
-    }
+  }
+
+  const handleSetStats = (stats: Stats) => {
+    setStats(stats);
+  }
 
   return (
-    <Flex>
+    <Flex direction="column" align="center">
       <Header />
-      <TaskList tasks={tasks} refreshTaskList={refreshTaskList}/>
-      <TaskManagerStats tasks={tasks} refreshTaskList={refreshTaskList}/>
+      <Flex direction="row" justify="space-between" width="100%">
+        <TaskList tasks={tasks} refreshTaskList={refreshTaskList} />
+        <TaskManagerStats tasks={tasks} setStats={handleSetStats} />
+      </Flex>
+      <DrawCharts stats={stats} />
     </Flex>
   )
 }

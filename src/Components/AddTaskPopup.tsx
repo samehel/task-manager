@@ -40,7 +40,6 @@ const AddTaskPopup = ({ isOpen, onClose, onCreateTask }: AddTaskPopupProps) => {
   const [dueDateError, setDueDateError] = useState("");
 
   const handleCreateTask = async () => {
-    console.log(dueDateError)
     if (!validateForm()) 
         return;
 

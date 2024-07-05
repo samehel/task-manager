@@ -67,7 +67,8 @@ This Task Management System is a web application designed to help users manage t
 - **DELETE /api/delete_task/:id**: Deletes a task by ID.
 
 ## Usage
-- **Creating a Task:** Use the form on the main page to add a new task.
-- **Updating a Task:** Click on a task to open the update popup and modify the task details.
+- **Creating a Task:** Use the form on the main page (displayed after clicking the '+' button) to add a new task.
+- **Updating a Task:** Click on edit icon next to a task to open the update popup and modify the task details.
 - **Deleting a Task:** Click the delete button next to a task to remove it.
+- **Viewing a Task:** Click on any task to view it in detail
 - **Viewing Statistics:** The dashboard displays various statistics about the tasks.

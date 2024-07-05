@@ -113,7 +113,7 @@ const TaskManagerStats = ({ tasks, setStats }: TaskListProps) => {
                     Completed Tasks:
                 </Text>
                 <Text fontFamily={theme.fonts.text} fontSize="large" textAlign="center">
-                    {completedTasks} {completedTasks > 0 ? '(' : ''}{((completedTasks/totalTasks) * 100).toFixed(0)}%{completedTasks > 0 ? ')' : ''} 
+                    {completedTasks} {completedTasks > 0 ? '(' : ''}{completedTasks > 0 ? ((completedTasks/totalTasks) * 100).toFixed(0) : ""}{completedTasks > 0 ? '%' : ''}{completedTasks > 0 ? ')' : ''} 
                 </Text>
             </Flex>
             <Flex justifyContent="center" alignItems="center" mb="2">

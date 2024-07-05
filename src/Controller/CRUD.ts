@@ -1,10 +1,12 @@
 import axios from 'axios'
 
-const GET_TASKS_URL = 'http://localhost:3002/api/get_all_tasks';
-const CREATE_TASK_URL = 'http://localhost:3002/api/create_task';
-const UPDATE_TASK_URL = 'http://localhost:3002/api/update_task';
-const DELETE_TASK_URL = 'http://localhost:3002/api/delete_task';
+const dbHost = import.meta.env.VITE_DB_HOST
+const dbPort = import.meta.env.VITE_SERVER_PORT
 
+const GET_TASKS_URL = `http://${dbHost}:${dbPort}/api/get_all_tasks`;
+const CREATE_TASK_URL = `http://${dbHost}:${dbPort}/api/create_task`;
+const UPDATE_TASK_URL = `http://${dbHost}:${dbPort}/api/update_task`;
+const DELETE_TASK_URL = `http://${dbHost}:${dbPort}/api/delete_task`;
 
 interface TaskProp {
     _id?: number, 

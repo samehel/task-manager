@@ -4,7 +4,7 @@ import TaskDataModel from './Models/Task';
 const router = express.Router();
 
 // Retrieve All
-router.get('/api/get_all_tasks', async (req, res) => {
+router.get('/api/get_all_tasks', async (_, res) => {
     try {
         const tasks = await TaskDataModel.find();
         res.json(tasks);

@@ -8,6 +8,9 @@ import { getAllTasks } from "./Controller/CRUD";
 import TaskManagerStats from "./Components/TaskManagerStats";
 import DrawCharts from "./Components/DrawCharts";
 
+const dbHost = import.meta.env.VITE_DB_HOST
+const dbPort = import.meta.env.VITE_SERVER_PORT
+
 interface Task {
   _id: number;
   title: string;
@@ -35,7 +38,7 @@ function App() {
 
   useEffect(() => {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://localhost:3002', true);
+    xhr.open('GET', `http://${dbHost}:${dbPort}`, true);
     xhr.onreadystatechange = () => {
       if(xhr.readyState === 4) {
         if(xhr.status === 200) 
